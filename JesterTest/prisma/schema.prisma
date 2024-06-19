@@ -4,6 +4,20 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+
+//For migrations: Make changes to schema.prisma as needed.
+
+// Generate migrations:
+// bash
+
+// npx prisma migrate dev --name <migration-name>
+
+// Apply migrations to update your database schema:
+// bash
+
+// npx prisma migrate deploy
+
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,10 +28,53 @@ datasource db {
 }
 
 model Movie {
-  id     Int      @id @default(autoincrement())
-  title  String
-  year   Int
-  director  String
+  id          Int      @id @default(autoincrement())
+  title       String
+  year        Int
+  director    String
   description String
-  imageUrl String
+  imageUrl    String
+
+  tags      MovieTags[]
+  users     Favorite[]
+}
+
+model User {
+  id          Int @id @default(autoincrement())
+  name        String
+  avatarURl   String
+  //auth Clerk or Firebase tbd
+
+  movies  Favorite[]
+}
+
+model Favorite {
+
+  user     User    @relation(fields: [userId], references: [id])
+  userId    Int
+  movie    Movie   @relation(fields: [movieId], references: [id])
+  movieId   Int
+
+  @@id([userId, movieId])
+}
+
+model Tag {
+  id          Int @id @default(autoincrement())
+  text        String
+  tagId      Int
+
+  movies    MovieTags[]
+}
+
+
+
+model MovieTags {
+  movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int //relation scalar field (used in the line above @relation)
+  tag     Tag   @relation(fields: [tagId], references: [id])
+  tagId   Int //relation scalar field (used in the line above @relation)
+  assignedAt  DateTime @default(now())
+  assignedBy String
+
+  @@id([movieId, tagId])
 }
