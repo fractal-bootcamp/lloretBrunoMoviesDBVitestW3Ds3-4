@@ -1,25 +1,20 @@
 import { Request, Response } from 'express';
-import { getMovies, addMovie, updateMovie, deleteMovie } from '../models/Movie';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 
-export interface Movie {
-    id: number;
-    title: string;
-    year: number;
-    director: string;
-    description: string;
-    imageUrl: string
-}
+export const addNewMovie = async (req: Request, res: Response) => {
+    const { title, year, director, description, imageUrl } = req.body;
 
+    try {
+        const newMovie = await prisma.movie.create({
+            data: { title, year, director, description, imageUrl },
+        });
 
-export const getListMovies = (req: Request, res: Response): void => {
-    res.json(getMovies());
-};
-
-export const addNewMovie = (req: Request, res: Response): void => {
-    const newMovie: Movie = req.body;
-    addMovie(newMovie);
-    res.status(201).json(newMovie);
+        res.status(201).json(newMovie);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add movie' });
+    }
 };
 
 // export const updateTodoById = (req: Request, res: Response): void => {

@@ -1,45 +1,64 @@
+import { describe, it, expect, vi } from 'vitest';
 import { Request, Response } from 'express';
-import prismaMock from '@prisma/client';
 import { addNewMovie } from './src/controllers/moviesController';
-import { Movie } from './src/models/Movie'
 import { PrismaClient } from '@prisma/client';
-import { v4 as uuidv4 } from 'uuid';
 
-const fakeId = uuidv4();
-
+// Mocking PrismaClient
+vi.mock('@prisma/client', () => {
+    const create = vi.fn();
+    return {
+        PrismaClient: vi.fn().mockImplementation(() => {
+            return {
+                movie: {
+                    create,
+                },
+            };
+        }),
+        // Ensure `PrismaClient` is correctly typed
+        PrismaClientInstance: {
+            movie: {
+                create,
+            },
+        },
+    };
+});
 
 describe('addNewMovie controller', () => {
     it('should add a new movie', async () => {
+        const mockMovieData = {
+            id: 1,
+            title: "Stalker",
+            year: 1979,
+            director: "Tarkovsky",
+            description: `The film tells the story of an expedition led by a figure known as the "Stalker" (Alexander Kaidanovsky), who guides his two clients—a melancholic writer (Anatoly Solonitsyn) seeking inspiration, and a professor (Nikolai Grinko) seeking scientific discovery—through a hazardous wasteland to a mysterious restricted site`,
+            imageUrl: `https://en.wikipedia.org/wiki/Stalker_%281979_film%29#/media/File:Stalker_poster.jpg`
+        };
+
         const req = {
-            body: {
-                id: parseInt(fakeId),
-                title: "Stalker",
-                year: 1979,
-                director: "Tarkovsky",
-                description: `The film tells the story of an expedition led by a figure known as the "Stalker" (Alexander Kaidanovsky), who guides his two clients—a melancholic writer (Anatoly Solonitsyn) seeking inspiration, and a professor (Nikolai Grinko) seeking scientific discovery—through a hazardous wasteland to a mysterious restricted site`,
-                imageUrl: `https://en.wikipedia.org/wiki/Stalker_%281979_film%29#/media/File:Stalker_poster.jpg`
-            },
+            body: mockMovieData,
         } as Request;
 
         const res = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
+            status: vi.fn().mockReturnThis(),
+            json: vi.fn(),
         } as unknown as Response;
 
         const prisma = new PrismaClient();
 
-        await prisma.movie.create({
-            data: {
-                id: parseInt(fakeId),
-                title: "Stalker",
-                year: 1979,
-                director: "Tarkovsky",
-                description: `The film tells the story of an expedition led by a figure known as the "Stalker" (Alexander Kaidanovsky), who guides his two clients—a melancholic writer (Anatoly Solonitsyn) seeking inspiration, and a professor (Nikolai Grinko) seeking scientific discovery—through a hazardous wasteland to a mysterious restricted site`,
-                imageUrl: `https://en.wikipedia.org/wiki/Stalker_%281979_film%29#/media/File:Stalker_poster.jpg`
-            },
-        });
+        const mockedCreatedMovie = {
+            ...mockMovieData, id: 1
+        };
 
+        // Cast the type for the mock to allow the usage of mockResolvedValue
+        const createMock = prisma.movie.create as unknown as jest.Mock;
+        createMock.mockResolvedValue(mockedCreatedMovie);
+
+        await addNewMovie(req, res);
+
+        // Assert that res.status(201) was called
         expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.json).toHaveBeenCalledWith(req.body);
+
+        // Assert that res.json() was called with the created movie object
+        expect(res.json).toHaveBeenCalledWith(mockedCreatedMovie);
     });
 });

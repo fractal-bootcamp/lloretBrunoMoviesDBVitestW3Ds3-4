@@ -1,0 +1,11 @@
+-- schema.prisma // Define the data model, relationships and constraints of my data.
+
+--Model-View-Controller architectural pattern
+    --Models: the structure of my data.
+        - In the context of Prisma, your Prisma schema (schema.prisma) defines the models that map to your database tables.
+            Prisma's generated models (PrismaClient) serve as your data access layer.
+    --Controllers: Controllers contain the application logic that handles incoming requests, interacts with models (through Prisma),
+        performs business logic, and prepares a response to send back.
+    --Routes: Routes define the endpoints of your API or web application and specify which controller method handles each endpoint.
+        They map HTTP methods (GET, POST, PUT, DELETE, etc.) to specific controller actions.
+    
