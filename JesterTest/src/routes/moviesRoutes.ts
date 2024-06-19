@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { getAllTodos, createTodo, updateTodoById, deleteTodoById } from '../controllers/todoController';
+import { getMovies, addMovie, updateMovie, deleteMovie } from '../models/Movie';
 
 const router = Router();
 
-router.get('/todos', getAllTodos);
-router.post('/todos', createTodo);
-router.put('/todos/:id', updateTodoById);
-router.delete('/todos/:id', deleteTodoById);
+router.get('/movies', getMovies);
+router.post('/movies', addMovie);
+// router.put('/movies/:id', updateMovie);
+// router.delete('/movies/:id', deleteMovie);
 
 export default router;
