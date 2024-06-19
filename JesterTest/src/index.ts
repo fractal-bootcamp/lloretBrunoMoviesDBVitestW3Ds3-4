@@ -1,8 +1,9 @@
 
 import bodyParser from 'body-parser';
 import moviesRoutes from './routes/moviesRoutes';
-
 import { Request, Response } from 'express';
+
+const request = require('supertest');
 const express = require('express');
 const app = express();
 
@@ -33,3 +34,13 @@ main()
     .finally(async () => {
         await prisma.$disconnect();
     });
+
+
+// request(app)
+//     .get('/movies')
+//     .expect('Content-Type', /json/)
+//     .expect('Content-Length', '15')
+//     .expect(200)
+//     .end(function(err, res) {
+//         if (err) throw err;
+//     });
