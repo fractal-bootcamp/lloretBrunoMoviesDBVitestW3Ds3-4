@@ -1,6 +1,6 @@
 
 import bodyParser from 'body-parser';
-// import todoRoutes from './routes/todoRoutes';
+import moviesRoutes from './routes/moviesRoutes';
 
 import { Request, Response } from 'express';
 const express = require('express');
@@ -11,9 +11,25 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use(bodyParser.json());
-// app.use('/api', todoRoutes);
+app.use('/api', moviesRoutes);
 
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
 });
 
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+    // Your Prisma Client operations here
+}
+
+main()
+    .catch((e) => {
+        console.error(e);
+        process.exit(1);
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });
