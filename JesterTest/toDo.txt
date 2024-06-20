@@ -8,4 +8,48 @@
         performs business logic, and prepares a response to send back.
     --Routes: Routes define the endpoints of your API or web application and specify which controller method handles each endpoint.
         They map HTTP methods (GET, POST, PUT, DELETE, etc.) to specific controller actions.
-    
+
+
+
+
+Week3Day4
+
+
+--Plan:
+    -Search for an item (movie) DONE and TESTED
+    -View details of item 
+    -Add item to favorites list
+
+--BackEnd:
+
+--Prisma entities: DONE
+--Models:
+    -Tested:
+        -Movie[] declared
+        -getMovies: get all the movies stored
+        -addMovie: add a movie to the movies list
+        -searchMovies: search through a string and get the movies.title of the match
+
+    -Re-conversions:
+        -a variation of getMovies for getUserFavorites
+        -a variation of addMovie for addMovieToFavorites
+
+
+    -Built:
+        -findMovieTitleByString
+
+    -To build:
+        -Get user's favorite list
+        -Add movie to user's favorite list
+    -Comments:
+        -See Re-convertions in Models.
+            -a variation of getMovies for getUserFavorites
+            -a variation of addMovie for addMovieToFavorites
+
+
+--ToDoList:
+    -Implement and test findMovieTitleByString 
+    -Variation of getMovies
+    -Variation of addMovie
+
+    -Set my PrismaClient operations
