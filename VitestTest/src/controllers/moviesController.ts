@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getMovies, addMovie, addMovieFavorite, findMovieTitleByString } from '../models/Movie';
+import { getMovies, getFavorites, getUserFavorites, addMovie, addMovieFavorite, findMovieTitleByString } from '../models/Movie';
 import { Movie, User, Favorite, PrismaClient } from '@prisma/client';
 
 
@@ -77,6 +77,58 @@ export const addMovieToFavorites = async (req: Request, res: Response): Promise<
     }
 
 };
+
+
+export const getAllFavorites = (req: Request, res: Response): void => {
+    res.json(getFavorites());
+}
+
+
+export const getUserListOfFavorites = async (req: Request, res: Response): Promise<void> => {
+    const { userId } = req.body as { userId: number }; // Assuming userId is in req.body
+    const prisma = new PrismaClient();
+
+    try {
+        // Fetch all favorites for the user
+        const listOfFavorites = await prisma.favorite.findMany({
+            where: {
+                userId: userId
+            },
+            select: {
+                movie: {
+                    select: {
+                        title: true,
+                        year: true,
+                        director: true
+                    }
+                }
+            }
+        });
+
+        if (listOfFavorites.length > 0) {
+            // Map the results to the required format
+            const formattedFavorites = listOfFavorites.map(favorite => ({
+                title: favorite.movie.title,
+                year: favorite.movie.year,
+                director: favorite.movie.director
+            }));
+
+            res.json(formattedFavorites);
+        } else {
+            res.status(404).json({ error: 'No favorites found' });
+        }
+    } catch (error) {
+        console.error('Error fetching favorites:', error);
+        res.status(500).json({ error: 'Failed to fetch favorites' });
+    } finally {
+        await prisma.$disconnect();
+    }
+};
+
+
+
+
+
 
 // export const updateTodoById = (req: Request, res: Response): void => {
 //     const id = parseInt(req.params.id);

@@ -48,8 +48,8 @@ Week3Day4
 
 
 --ToDoList:
-    -Implement and test findMovieTitleByString 
-    -Variation of getMovies
-    -Variation of addMovie
+    -Implement and test findMovieTitleByString DONE and TESTED
+    -getUserFavorites: variation of getMovies 
+    -Variation of addMovie DONE and TESTED
 
     -Set my PrismaClient operations

@@ -62,12 +62,14 @@ export interface User {
 
 import { PrismaClient } from '@prisma/client';
 import { Movie } from '@prisma/client';
+import { KeyObject } from 'tls';
 
 const prisma = new PrismaClient();
 
 
 let movies: Movie[] = []; //Do I have to link this with the real database eventually?
 let favorites: Favorite[] = []; // Same question
+
 
 export const getMovies = (): Movie[] => movies;
 
@@ -120,6 +122,16 @@ export const addMovieFavorite = (movie: Movie, user: User): void => {
 }
 
 
+export const getUserFavorites = (userId: User["id"], favorites: Favorite[]): Favorite | undefined => {
+
+
+    //go to the Favorites array
+    //find the Favorite object where the userId is
+    //render the favorite list of movie.title
+    const list = favorites.find(obj => obj.userId === userId);
+    return list;
+
+};
 
 // export const updateMovie = (id: number, updatedMovie: Movie): void => {
 //     const index = movies.findIndex(movie => movie.id === id);
