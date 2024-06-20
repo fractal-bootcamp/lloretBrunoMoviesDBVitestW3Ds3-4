@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { getMovies, getFavorites, getUserFavorites, addMovie, addMovieFavorite, findMovieTitleByString } from '../models/Movie';
 import { Movie, User, Favorite, PrismaClient } from '@prisma/client';
 
-
+const prisma = new PrismaClient();
 
 // export interface Movie {
 //     id: number;
@@ -85,11 +85,11 @@ export const getAllFavorites = (req: Request, res: Response): void => {
 
 
 export const getUserListOfFavorites = async (req: Request, res: Response): Promise<void> => {
-    const { userId } = req.body as { userId: number }; // Assuming userId is in req.body
-    const prisma = new PrismaClient();
+
+    const { userId } = req.body as { userId: number };
 
     try {
-        // Fetch all favorites for the user
+        // FETCH FAVORITES
         const listOfFavorites = await prisma.favorite.findMany({
             where: {
                 userId: userId
@@ -106,7 +106,7 @@ export const getUserListOfFavorites = async (req: Request, res: Response): Promi
         });
 
         if (listOfFavorites.length > 0) {
-            // Map the results to the required format
+            // MAP THE INFO TO BE DISPLAYED LATER IN FRONT END
             const formattedFavorites = listOfFavorites.map(favorite => ({
                 title: favorite.movie.title,
                 year: favorite.movie.year,
@@ -119,7 +119,7 @@ export const getUserListOfFavorites = async (req: Request, res: Response): Promi
         }
     } catch (error) {
         console.error('Error fetching favorites:', error);
-        res.status(500).json({ error: 'Failed to fetch favorites' });
+        res.status(500).json({ error: 'No favorites yet :(' });
     } finally {
         await prisma.$disconnect();
     }
