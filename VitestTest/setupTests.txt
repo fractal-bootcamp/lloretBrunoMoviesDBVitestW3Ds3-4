@@ -1,0 +1,22 @@
+// import { Request, Response } from 'express';
+// import { addNewMovie } from './src/controllers/moviesController'
+// import { PrismaClient } from '@prisma/client';
+
+// const prisma = new PrismaClient();
+
+// beforeAll(async () => {
+//     // Set up any necessary test data or test database connection
+// });
+
+// afterAll(async () => {
+//     // Clean up and close database connection
+//     await prisma.$disconnect();
+// });
+
+// beforeEach(async () => {
+//     // Clear any state between tests
+// });
+
+// afterEach(async () => {
+//     // Clean up after each test
+// });
