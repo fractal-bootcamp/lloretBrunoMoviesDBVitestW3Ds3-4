@@ -2,13 +2,14 @@
   "name": "jestertest",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "migrate:up": "prisma migrate deploy",
     "migrate:down": "prisma migrate reset --force",
-    "test": "jest"
+    "test": "vitest --config=vitest.config.ts"
   },
   "keywords": [],
   "author": "",

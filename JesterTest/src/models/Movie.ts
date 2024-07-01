@@ -51,22 +51,53 @@ export interface User {
     avatarUrl: String
 }
 
-export interface Movie {
-    id: number;
-    title: string;
-    year: number;
-    director: string;
-    description: string;
-    imageUrl: string
-}
+// export interface Movie {
+//     id: number;
+//     title: string;
+//     year: number;
+//     director: string;
+//     description: string;
+//     imageUrl: string
+// }
+
+import { PrismaClient } from '@prisma/client';
+import { Movie } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 
-let movies: Movie[] = [];
+let movies: Movie[] = []; //Do I have to link this with the real database eventually?
 
 
 export const getMovies = (): Movie[] => movies;
 
 export const addMovie = (movie: Movie): void => { movies.push(movie); };
+
+
+// Function to check if a string is in any element of the array
+export function findMovieTitleByString(movies: Movie[], searchString: string): string | null {
+
+    const lowerCaseSearchString = searchString.toLowerCase();
+
+
+    for (const movie of movies) {
+
+        if (
+            movie.title.toLowerCase().includes(lowerCaseSearchString) ||
+            movie.year.toString().includes(lowerCaseSearchString) ||
+            movie.director.toLowerCase().includes(lowerCaseSearchString) ||
+            movie.description.toLowerCase().includes(lowerCaseSearchString)
+        ) {
+
+            return movie.title;
+        }
+    }
+
+
+    return null;
+}
+
+
 
 // export const updateMovie = (id: number, updatedMovie: Movie): void => {
 //     const index = movies.findIndex(movie => movie.id === id);
@@ -75,27 +106,11 @@ export const addMovie = (movie: Movie): void => { movies.push(movie); };
 //     }
 // }
 
-export const deleteMovie = (id: number): void => {
-    movies = movies.filter(movie => movie.id !== id);
-}
-
-// export const findMovie = (movies: Movie[], searchString: string): "" => {
-//     // Iterate through each object in the array
-//     for (let i = 0; i < movies.length; i++) {
-//         const obj = movies[i];
-
-//         // Check if the search string matches any property of the current object
-//         for (let key in obj) {
-//             if (obj.hasOwnProperty(key) && typeof obj[key] === 'string') {
-//                 if (obj[key].toLowerCase().includes(searchString.toLowerCase())) {
-//                     return obj; // Return the object if a match is found
-//                 }
-//             }
-//         }
-//     }
-
-//     return null; // Return null if no match is found
+// export const deleteMovie = (id: number): void => {
+//     movies = movies.filter(movie => movie.id !== id);
 // }
+
+// Define the Movie interface
 
 
 

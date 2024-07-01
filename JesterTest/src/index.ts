@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import moviesRoutes from './routes/moviesRoutes';
 import { Request, Response } from 'express';
 
-const request = require('supertest');
+// const request = require('supertest');
 const express = require('express');
 const app = express();
 

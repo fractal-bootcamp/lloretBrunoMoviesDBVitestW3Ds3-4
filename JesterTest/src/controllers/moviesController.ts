@@ -1,21 +1,63 @@
 import { Request, Response } from 'express';
+import { getMovies, addMovie, findMovieTitleByString } from '../models/Movie';
 import { PrismaClient } from '@prisma/client';
+import { Movie } from '@prisma/client';
 
-const prisma = new PrismaClient();
 
-export const addNewMovie = async (req: Request, res: Response) => {
-    const { title, year, director, description, imageUrl } = req.body;
+
+// export interface Movie {
+//     id: number;
+//     title: string;
+//     year: number;
+//     director: string;
+//     description: string;
+//     imageUrl: string
+// }
+
+
+
+
+export const getListMovies = (req: Request, res: Response): void => {
+    res.json(getMovies());
+};
+
+export const addNewMovie = async (req: Request, res: Response): Promise<void> => {
+    const newMovie: Movie = req.body;
 
     try {
-        const newMovie = await prisma.movie.create({
-            data: { title, year, director, description, imageUrl },
-        });
+        const addedMovie = await addMovie(newMovie);
 
-        res.status(201).json(newMovie);
+        res.status(201).json(addedMovie);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to add movie' });
+        res.status(500).json({ error: `Failed to add movie` });
     }
 };
+
+
+export const findMovieByString = async (req: Request, res: Response): Promise<void> => {
+    // const queryMovie: Movie = req.query;
+    // const searchInput: string = searchString
+    const searchString: string = (req.query.search as string);
+
+    const prisma = new PrismaClient();
+
+    try {
+        // Fetch all movies from the database
+        const movies = await prisma.movie.findMany();
+
+        // Find the movie title by the search string
+        const movieTitle = findMovieTitleByString(movies, searchString);
+
+        if (movieTitle) {
+            res.json({ title: movieTitle });
+        } else {
+            res.status(404).json({ error: '404: nothing to see here' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to search for movie' });
+    }
+};
+
 
 // export const updateTodoById = (req: Request, res: Response): void => {
 //     const id = parseInt(req.params.id);

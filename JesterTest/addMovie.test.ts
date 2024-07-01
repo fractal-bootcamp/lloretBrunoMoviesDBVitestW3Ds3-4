@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { addNewMovie } from './src/controllers/moviesController';
 import { PrismaClient } from '@prisma/client';
 
-// Mocking PrismaClient
+
 vi.mock('@prisma/client', () => {
     const create = vi.fn();
     return {
@@ -14,7 +14,7 @@ vi.mock('@prisma/client', () => {
                 },
             };
         }),
-        // Ensure `PrismaClient` is correctly typed
+
         PrismaClientInstance: {
             movie: {
                 create,
@@ -49,16 +49,16 @@ describe('addNewMovie controller', () => {
             ...mockMovieData, id: 1
         };
 
-        // Cast the type for the mock to allow the usage of mockResolvedValue
+
         const createMock = prisma.movie.create as unknown as jest.Mock;
         createMock.mockResolvedValue(mockedCreatedMovie);
 
         await addNewMovie(req, res);
 
-        // Assert that res.status(201) was called
+  
         expect(res.status).toHaveBeenCalledWith(201);
 
-        // Assert that res.json() was called with the created movie object
+  
         expect(res.json).toHaveBeenCalledWith(mockedCreatedMovie);
     });
 });
